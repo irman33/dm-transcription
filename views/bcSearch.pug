@@ -1,0 +1,68 @@
+extends layout
+
+block content
+  .well
+    h2 Brightcove Search
+    h5
+    form.form-inline#search-form(action='/bc', method='post', enctype="application/x-www-form-urlencoded", data-toggle="validator")
+      .form-group
+        label(for='account_id') Brightcove Account:
+        select#account_id.form-control(name='accountId')
+          option(value='1107601866001') Grad - 1107601866001
+          option(value='5069692952001') Hawkeye - 5069692952001
+          option(value='1107601867001') Health - 1107601867001
+          option(value='3399141178001') Kaplan - 3399141178001
+          option(value='958462685001') Kaplan Test Prep - 958462685001
+          option(value='1107601868001') Marketing - 1107601868001
+          option(value='2546882126001') Other - 2546882126001
+          option(value='1107601869001') Pre College - 1107601869001
+      .form-group
+        label(for='search_field') Search By:
+        select#search_field.form-control(name='searchBy')
+          option(value='id') Brightcove Id
+          option(value='refId') Brightcove RefID
+      .form-group
+        label(for='search_term')  Search:
+        input#search_term.form-control(type='text', name='searchTerm', placeholder="Search Videos" required)
+      button.btn.btn-default(type='submit') Submit
+    br
+  .well
+    h4 Search Results:
+    .row
+      if search.error
+        .col-md-2
+        .col-md-10
+          p #{search.errorMsg}
+      else
+        .col-md-2
+          img(src=search.thumbnail)
+        .col-md-10
+          p
+            b Name:
+            |  #{search.name}
+          p
+            b Video Id:
+            |  #{search.id}
+          p
+            b RefID:
+            |  #{search.refId}
+          form.form-inline(action='/transcribe/'+ search.account + "/" +search.id, method='post')
+            button.btn.btn-default(type='submit') Transcribe
+  .page-header
+    .panel.panel-default
+      // Default panel contents
+      .panel-heading
+        h2 Audio Transcription List
+      // Table
+      table.table#videoList
+        tr
+          th Video ID
+          th Video Name
+          th Status
+        each file, i in videos
+          tr.linked-row(data-url='/video/'+file.id)
+            td #{file.accountId}
+            td #{file.videoId}
+            td #{file.videoName}
+            td
+              span.badge #{file.status}

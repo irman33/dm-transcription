@@ -1,0 +1,18 @@
+extends layout
+
+block content
+  .well
+    h2 File Uploader
+    h5
+    .progress
+      .progress-bar(role='progressbar')
+    button.btn.btn-lg.upload-btn(type='button') Upload File
+    | (Currently supports .wav or .ogg audio files, 100Mb limit)
+    input#upload-input(type='file', name='uploads[]', multiple='multiple')
+    br
+  .page-header
+    h1
+      | Audio Transcription Queue
+      small
+  .list-group
+    

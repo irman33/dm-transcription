@@ -1,0 +1,14 @@
+node_modules/
+.DS_Store
+*.log
+.idea
+haters/
+variables.env
+
+public/audio/*
+public/images/*
+public/json/*
+public/srt/*
+public/vtt/*
+public/text/*
+public/video/*

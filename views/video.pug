@@ -1,0 +1,50 @@
+extends layout
+
+block content
+  .page-header
+    h2 Transcript for #{video.videoName}
+    - var confidence = Math.floor(video.confidence * 10000) / 100
+    h3 Confidence Score: #{confidence}
+    if video.model
+      h4 Model: #{video.model}
+    if video.customization_id
+      h4 Customization ID: #{video.customization_id}
+  if video.err
+    h2 #{video.err}
+  else
+    .well
+      video.center(controls='')
+        source(src=video.source, type='video/mp4')
+        track(src='/vtt/'+video.id+'.vtt', kind='subtitles', srclang='en', label='English')
+        |   Your browser does not support the video tag.
+    p Word Confidence
+    - var confidenceClass = undefined
+    if video.wordConfidenceArr
+      pre.jsonBlock
+        each word in video.wordConfidenceArr
+          if word[1] < 0.5
+            - confidenceClass = "conf-low"
+          else if word[1] < 0.8
+            - confidenceClass = "conf-med"
+          else if word[1] < 0.9
+            - confidenceClass = "conf-high"
+          else
+            - confidenceClass = undefined
+          span.word-container
+            a.words(class= confidenceClass) #{word[0]} &nbsp
+              .word-box.hidden
+                p  Confidence: #{word[1]}
+
+    p Text:
+    pre.jsonBlock #{video.text}
+    - var jsonStr = JSON.stringify(json, null, 2);
+    p JSON:
+    pre.jsonBlock #{jsonStr}
+    p.col-md-6 SRT:
+      a(href='/srt/'+video.id+'.srt', download='')
+        |  Download
+    p.col-md-6 WebVTT:
+      a(href='/vtt/'+video.id+'.vtt', download='')
+        |  Download
+    pre.col-md-6.jsonBlock #{video.srt}
+    pre.col-md-6.jsonBlock #{vtt}
